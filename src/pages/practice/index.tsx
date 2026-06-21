@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
@@ -8,7 +8,7 @@ import OptionCard from '@/components/OptionCard';
 import AITip from '@/components/AITip';
 import ProgressBar from '@/components/ProgressBar';
 import { usePracticeStore } from '@/store/usePracticeStore';
-import { getTodayQuestions } from '@/data/practice';
+import { getTodayQuestions, getQuestionById } from '@/data/practice';
 import { calcCorrectRate } from '@/utils';
 import type { PracticeQuestion } from '@/types';
 import styles from './index.module.scss';
@@ -29,11 +29,25 @@ const PracticePage: React.FC = () => {
   const [questions, setQuestions] = useState<PracticeQuestion[]>([]);
   const [correctCount, setCorrectCount] = useState(0);
 
+  const questionIdRef = useRef<string | undefined>(
+    Taro.getCurrentInstance().router?.params?.questionId
+  );
+
   useEffect(() => {
-    const todayQuestions = getTodayQuestions();
-    setQuestions(todayQuestions);
-    usePracticeStore.setState({ todayQuestions });
-    console.log('[Practice] 加载今日练习题', { count: todayQuestions.length });
+    const targetId = questionIdRef.current;
+    let loadedQuestions: PracticeQuestion[];
+
+    if (targetId) {
+      const question = getQuestionById(targetId);
+      loadedQuestions = question ? [question] : getTodayQuestions();
+      console.log('[Practice] 从错题本跳转，加载单题', { questionId: targetId, found: !!question });
+    } else {
+      loadedQuestions = getTodayQuestions();
+      console.log('[Practice] 加载今日练习题', { count: loadedQuestions.length });
+    }
+
+    setQuestions(loadedQuestions);
+    usePracticeStore.setState({ todayQuestions: loadedQuestions });
   }, []);
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -70,10 +84,19 @@ const PracticePage: React.FC = () => {
   const handleRetry = () => {
     resetPractice();
     setCorrectCount(0);
-    const todayQuestions = getTodayQuestions();
-    setQuestions(todayQuestions);
-    usePracticeStore.setState({ todayQuestions });
-    console.log('[Practice] 重新开始练习');
+    const targetId = questionIdRef.current;
+    let loadedQuestions: PracticeQuestion[];
+
+    if (targetId) {
+      const question = getQuestionById(targetId);
+      loadedQuestions = question ? [question] : getTodayQuestions();
+    } else {
+      loadedQuestions = getTodayQuestions();
+    }
+
+    setQuestions(loadedQuestions);
+    usePracticeStore.setState({ todayQuestions: loadedQuestions });
+    console.log('[Practice] 重新开始练习', { isRetryQuestion: !!targetId });
   };
 
   const isSelectedCorrect = () => {
@@ -99,7 +122,9 @@ const PracticePage: React.FC = () => {
           <View className={styles.completeIcon}>
             <Text className={styles.completeIconText}>✓</Text>
           </View>
-          <Text className={styles.completeTitle}>今日训练完成！</Text>
+          <Text className={styles.completeTitle}>
+            {questionIdRef.current ? '错题重练完成！' : '今日训练完成！'}
+          </Text>
           <Text className={styles.completeSubtitle}>
             {rate >= 80 ? '太棒了！继续保持！' : rate >= 60 ? '不错哦，还有提升空间！' : '加油，多多练习！'}
           </Text>

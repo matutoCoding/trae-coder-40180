@@ -20,6 +20,7 @@ export interface DialogueTurn {
   speaker: 'customer' | 'agent';
   content: string;
   timestamp?: string;
+  segment?: SceneType;
 }
 
 export interface Material {
@@ -94,3 +95,10 @@ export interface UserInfo {
   joinDate: string;
   stats: UserStats;
 }
+
+export type AddMaterialForm = {
+  title: string;
+  quality: MaterialQuality;
+  scene: SceneType;
+  category: string;
+};

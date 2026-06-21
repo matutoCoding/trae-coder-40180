@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import MistakeItem from '@/components/MistakeItem';
-import mistakeRecords, { getMistakeStats, getErrorTypeStats } from '@/data/mistakes';
 import { usePracticeStore } from '@/store/usePracticeStore';
 import { getSceneLabel } from '@/utils';
 import type { SceneType } from '@/types';
@@ -10,14 +10,12 @@ import styles from './index.module.scss';
 
 const MistakesPage: React.FC = () => {
   const [selectedScene, setSelectedScene] = useState<SceneType | 'all'>('all');
-  const { mistakes } = usePracticeStore();
+  const mistakes = usePracticeStore(state => state.mistakes);
+  const getMistakeStats = usePracticeStore(state => state.getMistakeStats);
+  const getErrorTypeStats = usePracticeStore(state => state.getErrorTypeStats);
 
-  const allMistakes = useMemo(() => {
-    return [...mistakeRecords, ...mistakes];
-  }, [mistakes]);
-
-  const sceneStats = getMistakeStats();
-  const errorTypeStats = getErrorTypeStats();
+  const sceneStats = useMemo(() => getMistakeStats(), [mistakes]);
+  const errorTypeStats = useMemo(() => getErrorTypeStats(), [mistakes]);
 
   const sceneOptions: Array<{ value: SceneType | 'all'; label: string }> = [
     { value: 'all', label: '全部' },
@@ -28,27 +26,30 @@ const MistakesPage: React.FC = () => {
   ];
 
   const filteredMistakes = useMemo(() => {
-    if (selectedScene === 'all') return allMistakes;
-    return allMistakes.filter(m => m.scene === selectedScene);
-  }, [selectedScene, allMistakes]);
+    if (selectedScene === 'all') return mistakes;
+    return mistakes.filter(m => m.scene === selectedScene);
+  }, [selectedScene, mistakes]);
 
   const weakestScene = useMemo(() => {
     let maxCount = 0;
     let weakest: SceneType = 'opening';
-    Object.entries(sceneStats).forEach(([scene, count]) => {
+    (Object.entries(sceneStats) as [SceneType, number][]).forEach(([scene, count]) => {
       if (count > maxCount) {
         maxCount = count;
-        weakest = scene as SceneType;
+        weakest = scene;
       }
     });
     return { scene: weakest, count: maxCount };
   }, [sceneStats]);
 
-  const totalMistakes = allMistakes.length;
+  const totalMistakes = mistakes.length;
 
   const handleSceneChange = (scene: SceneType | 'all') => {
     setSelectedScene(scene);
-    console.log('[Mistakes] 切换错题场景筛选', { scene });
+  };
+
+  const handleMistakeClick = (id: string) => {
+    Taro.navigateTo({ url: `/pages/mistake-detail/index?id=${id}` });
   };
 
   const maxErrorCount = Math.max(...Object.values(errorTypeStats), 1);
@@ -68,11 +69,13 @@ const MistakesPage: React.FC = () => {
             <View className={styles.weakestScene}>
               <Text className={styles.weakestLabel}>薄弱环节</Text>
               <Text className={styles.weakestName}>
-                {getSceneLabel(weakestScene.scene)}
+                {totalMistakes > 0 ? getSceneLabel(weakestScene.scene) : '暂无'}
               </Text>
-              <Text style={{ fontSize: '22rpx', color: 'rgba(255,255,255,0.7', marginTop: '4rpx' }}>
-                {weakestScene.count} 次错误
-              </Text>
+              {totalMistakes > 0 && (
+                <Text style={{ fontSize: '22rpx', color: 'rgba(255,255,255,0.7)', marginTop: '4rpx' }}>
+                  {weakestScene.count} 次错误
+                </Text>
+              )}
             </View>
           </View>
 
@@ -120,20 +123,26 @@ const MistakesPage: React.FC = () => {
           <View className={styles.titleIcon} />
           <Text>错误类型分析</Text>
         </View>
-        <View className={styles.errorTypeList}>
-          {Object.entries(errorTypeStats).map(([type, count]) => (
-            <View key={type} className={styles.errorTypeItem}>
-              <Text className={styles.errorTypeName}>{type}</Text>
-              <View className={styles.errorTypeBar}>
-                <View
-                  className={styles.errorTypeFill}
-                  style={{ width: `${(count / maxErrorCount) * 100}%` }}
-                />
+        {Object.keys(errorTypeStats).length > 0 ? (
+          <View className={styles.errorTypeList}>
+            {Object.entries(errorTypeStats).map(([type, count]) => (
+              <View key={type} className={styles.errorTypeItem}>
+                <Text className={styles.errorTypeName}>{type}</Text>
+                <View className={styles.errorTypeBar}>
+                  <View
+                    className={styles.errorTypeFill}
+                    style={{ width: `${(count / maxErrorCount) * 100}%` }}
+                  />
+                </View>
+                <Text className={styles.errorTypeCount}>{count}次</Text>
               </View>
-              <Text className={styles.errorTypeCount}>{count}次</Text>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        ) : (
+          <View className={styles.emptyState}>
+            <Text className={styles.emptyText}>暂无错误类型数据</Text>
+          </View>
+        )}
       </View>
 
       <View className={styles.sectionTitle}>
@@ -145,7 +154,11 @@ const MistakesPage: React.FC = () => {
       {filteredMistakes.length > 0 ? (
         <View className={styles.mistakeList}>
           {filteredMistakes.map(mistake => (
-            <MistakeItem key={mistake.id} mistake={mistake} />
+            <MistakeItem
+              key={mistake.id}
+              mistake={mistake}
+              onClick={() => handleMistakeClick(mistake.id)}
+            />
           ))}
         </View>
       ) : (

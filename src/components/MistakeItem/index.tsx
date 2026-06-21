@@ -61,7 +61,15 @@ const MistakeItem: React.FC<MistakeItemProps> = ({ mistake, onClick, className }
         <Text className={styles.reviewCount}>
           已复习 {mistake.reviewCount} 次
         </Text>
-        <View className={styles.retryBtn}>
+        <View
+          className={styles.retryBtn}
+          onClick={(e) => {
+            e.stopPropagation();
+            Taro.navigateTo({
+              url: `/pages/practice/index?questionId=${mistake.questionId}`
+            });
+          }}
+        >
           <Text className={styles.retryBtnText}>再练一次</Text>
         </View>
       </View>

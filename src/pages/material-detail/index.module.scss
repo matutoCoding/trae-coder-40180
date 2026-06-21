@@ -1,37 +1,224 @@
 @use '@/styles/variables.scss' as *;
 
 .pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page-gradient;
   padding: 0 $page-padding;
   padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-xl});
-  min-height: 100vh;
   box-sizing: border-box;
+}
+
+.headerCard {
+  @include card-base;
+  margin-top: $spacing-lg;
+  background: $color-primary-gradient;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -40rpx;
+    right: -40rpx;
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: $radius-round;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.materialTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-md;
+  position: relative;
+}
+
+.tagRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  position: relative;
+}
+
+.qualityTag {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+
+  &.excellent {
+    background: rgba(16, 185, 129, 0.2);
+  }
+
+  &.failed {
+    background: rgba(239, 68, 68, 0.2);
+  }
+}
+
+.qualityTagText {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  .excellent & {
+    color: #6EE7B7;
+  }
+
+  .failed & {
+    color: #FCA5A5;
+  }
+}
+
+.summaryCard {
+  @include card-base;
+  margin-top: $spacing-md;
+}
+
+.infoCard {
+  @include card-base;
+  margin-top: $spacing-md;
+}
+
+.segmentCard {
+  @include card-base;
+  margin-top: $spacing-md;
+}
+
+.dialogueCard {
+  @include card-base;
+  margin-top: $spacing-md;
+  padding-bottom: $spacing-md;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.sectionIcon {
+  width: 8rpx;
+  height: 28rpx;
+  border-radius: 4rpx;
+  background: $color-primary-gradient;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.summaryText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.infoGrid {
+  display: flex;
+  justify-content: space-between;
+  gap: $spacing-sm;
+}
+
+.infoItem {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: $spacing-md $spacing-sm;
+  background: $color-bg-page;
+  border-radius: $radius-md;
 }
 
-.placeholderContent {
-  text-align: center;
-  padding: $spacing-xl * 2;
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-xs;
 }
 
-.placeholderIcon {
+.infoValue {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+}
+
+.segmentList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.segmentItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+}
+
+.segmentCount {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.dialogueCount {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-left: auto;
+}
+
+.dialogueList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.dialogueItem {
+  position: relative;
+}
+
+.dialogueCardWrapper {
+  margin-bottom: $spacing-xs;
+}
+
+.dialogueSegmentTag {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -$spacing-sm;
+  padding-right: $spacing-sm;
+}
+
+.notFound {
+  @include flex-center;
+  flex-direction: column;
+  min-height: 80vh;
+}
+
+.notFoundIcon {
   font-size: 120rpx;
   margin-bottom: $spacing-lg;
   opacity: 0.3;
 }
 
-.placeholderTitle {
+.notFoundTitle {
   font-size: $font-size-xl;
   font-weight: $font-weight-semibold;
   color: $color-text-primary;
-  display: block;
-  margin-bottom: $spacing-md;
+  margin-bottom: $spacing-sm;
 }
 
-.placeholderText {
+.notFoundDesc {
   font-size: $font-size-md;
   color: $color-text-tertiary;
-  line-height: $line-height-loose;
+}
+
+.bottomSpacer {
+  height: $spacing-xl;
 }
