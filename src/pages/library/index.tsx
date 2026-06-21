@@ -6,7 +6,7 @@ import DialogueCard from '@/components/DialogueCard';
 import SceneTag from '@/components/SceneTag';
 import materials from '@/data/materials';
 import { usePracticeStore } from '@/store/usePracticeStore';
-import { formatDuration, formatDate, getQualityLabel, getQualityColor, getSceneLabel } from '@/utils';
+import { formatDuration, formatDate, getQualityLabel, getQualityColor } from '@/utils';
 import type { SceneType, MaterialQuality, AddMaterialForm, Material } from '@/types';
 import styles from './index.module.scss';
 

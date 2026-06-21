@@ -7,7 +7,7 @@ import materials from '@/data/materials';
 import SceneTag from '@/components/SceneTag';
 import DialogueCard from '@/components/DialogueCard';
 import type { Material, SceneType } from '@/types';
-import { formatDuration, formatDate, getQualityLabel, getQualityColor, getSceneLabel } from '@/utils';
+import { formatDuration, formatDate, getQualityLabel, getQualityColor } from '@/utils';
 import styles from './index.module.scss';
 
 const MaterialDetailPage: React.FC = () => {

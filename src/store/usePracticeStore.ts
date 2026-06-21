@@ -47,34 +47,28 @@ const initialUserInfo: UserInfo = {
 };
 
 const generateDialogueFromForm = (form: AddMaterialForm): DialogueTurn[] => {
-  const templates: Record<SceneType, DialogueTurn[]> = {
-    opening: [
-      { id: 'd0', speaker: 'agent', content: '您好，这里是XX客服中心，我是客服专员小A，请问有什么可以帮助您的？', timestamp: '00:00', segment: 'opening' },
-      { id: 'd1', speaker: 'customer', content: '你好，我想咨询一下相关业务的事情。', timestamp: '00:08', segment: 'opening' },
-      { id: 'd2', speaker: 'agent', content: '好的，为了更好地为您服务，请先确认一下您的身份信息可以吗？', timestamp: '00:15', segment: 'opening' }
-    ],
-    clarify: [
-      { id: 'd0', speaker: 'customer', content: '我这个订单已经处理了，为什么还没到账？', timestamp: '00:00', segment: 'clarify' },
-      { id: 'd1', speaker: 'agent', content: '非常抱歉给您带来不便，请问您的订单号是多少呢？', timestamp: '00:08', segment: 'clarify' },
-      { id: 'd2', speaker: 'customer', content: '订单号是20260622001。', timestamp: '00:15', segment: 'clarify' },
-      { id: 'd3', speaker: 'agent', content: '好的，我帮您查看一下。请问还有其他需要确认的信息吗？', timestamp: '00:22', segment: 'clarify' }
-    ],
-    comfort: [
-      { id: 'd0', speaker: 'customer', content: '你们怎么回事啊！我已经等了很久了，问题还没解决！', timestamp: '00:00', segment: 'comfort' },
-      { id: 'd1', speaker: 'agent', content: '非常抱歉让您这么生气，我完全理解您现在的心情。您先消消气，我这边马上为您处理。', timestamp: '00:10', segment: 'comfort' },
-      { id: 'd2', speaker: 'customer', content: '唉，你们每次都这么说。', timestamp: '00:20', segment: 'comfort' },
-      { id: 'd3', speaker: 'agent', content: '真的非常抱歉，这次我亲自跟进，一定给您满意答复。', timestamp: '00:28', segment: 'comfort' }
-    ],
-    closing: [
-      { id: 'd0', speaker: 'agent', content: '好的，您的问题我已经记录下来了，我们会尽快安排处理。', timestamp: '00:00', segment: 'closing' },
-      { id: 'd1', speaker: 'customer', content: '好的，那我等你们消息。', timestamp: '00:08', segment: 'closing' },
-      { id: 'd2', speaker: 'agent', content: '请问还有其他可以帮到您的吗？', timestamp: '00:14', segment: 'closing' },
-      { id: 'd3', speaker: 'customer', content: '没有了，谢谢。', timestamp: '00:18', segment: 'closing' },
-      { id: 'd4', speaker: 'agent', content: '不客气，感谢您的来电，祝您生活愉快，再见！', timestamp: '00:22', segment: 'closing' }
-    ]
-  };
+  const allDialogue: DialogueTurn[] = [
+    { id: 'd0', speaker: 'agent', content: '您好，这里是XX客服中心，我是客服专员小A，请问有什么可以帮助您的？', timestamp: '00:00', segment: 'opening' },
+    { id: 'd1', speaker: 'customer', content: '你好，我想咨询一下相关业务的事情。', timestamp: '00:08', segment: 'opening' },
+    { id: 'd2', speaker: 'agent', content: '好的，为了更好地为您服务，请先确认一下您的身份信息可以吗？', timestamp: '00:15', segment: 'opening' },
 
-  return templates[form.scene] || templates.opening;
+    { id: 'd3', speaker: 'customer', content: '可以，我是张先生，想咨询一下我这个订单的问题。', timestamp: '00:22', segment: 'clarify' },
+    { id: 'd4', speaker: 'agent', content: '好的张先生，请问您具体是遇到什么问题呢，可以详细描述一下吗？', timestamp: '00:28', segment: 'clarify' },
+    { id: 'd5', speaker: 'customer', content: '我这个订单已经处理好几天了，为什么还没到账？', timestamp: '00:35', segment: 'clarify' },
+    { id: 'd6', speaker: 'agent', content: '非常抱歉给您带来不便，请问您的订单号是多少呢？我帮您查询一下。', timestamp: '00:42', segment: 'clarify' },
+
+    { id: 'd7', speaker: 'customer', content: '订单号是20260622001，你们怎么回事啊！我已经等了很久了，问题还没解决！', timestamp: '00:50', segment: 'comfort' },
+    { id: 'd8', speaker: 'agent', content: '非常抱歉让您这么生气，我完全理解您现在的心情。您先消消气，我这边马上为您处理。', timestamp: '01:00', segment: 'comfort' },
+    { id: 'd9', speaker: 'customer', content: '唉，你们每次都这么说。', timestamp: '01:10', segment: 'comfort' },
+    { id: 'd10', speaker: 'agent', content: '真的非常抱歉，这次我亲自跟进，一定给您满意答复。', timestamp: '01:18', segment: 'closing' },
+
+    { id: 'd11', speaker: 'customer', content: '好的，那我等你们消息。', timestamp: '01:25', segment: 'closing' },
+    { id: 'd12', speaker: 'agent', content: '请问还有其他可以帮到您的吗？', timestamp: '01:30', segment: 'closing' },
+    { id: 'd13', speaker: 'customer', content: '没有了，谢谢。', timestamp: '01:35', segment: 'closing' },
+    { id: 'd14', speaker: 'agent', content: '不客气，感谢您的来电，祝您生活愉快，再见！', timestamp: '01:40', segment: 'closing' }
+  ];
+
+  return allDialogue;
 };
 
 interface PracticeState {
@@ -88,6 +82,7 @@ interface PracticeState {
   isPracticeComplete: boolean;
   practiceTargetQuestionId: string | null;
   practiceFromMistakeId: string | null;
+  reviewCountIncremented: boolean;
 
   setCurrentQuestionIndex: (index: number) => void;
   setSelectedOption: (optionId: string | null) => void;
@@ -104,6 +99,7 @@ interface PracticeState {
   findMistakeById: (id: string) => MistakeRecord | undefined;
   startMistakePractice: (mistakeId: string) => void;
   finishMistakePractice: () => void;
+  exitMistakePractice: () => void;
 }
 
 export const usePracticeStore = create<PracticeState>((set, get) => ({
@@ -117,6 +113,7 @@ export const usePracticeStore = create<PracticeState>((set, get) => ({
   isPracticeComplete: false,
   practiceTargetQuestionId: null,
   practiceFromMistakeId: null,
+  reviewCountIncremented: false,
 
   setCurrentQuestionIndex: (index: number) => set({ currentQuestionIndex: index }),
   setSelectedOption: (optionId: string | null) => set({ selectedOptionId: optionId }),
@@ -262,22 +259,31 @@ export const usePracticeStore = create<PracticeState>((set, get) => ({
   startMistakePractice: (mistakeId: string) => {
     const mistake = get().findMistakeById(mistakeId);
     if (!mistake) return;
+    const { resetPractice } = get();
+    resetPractice();
     set({
       practiceTargetQuestionId: mistake.questionId,
-      practiceFromMistakeId: mistakeId
+      practiceFromMistakeId: mistakeId,
+      reviewCountIncremented: false
     });
     console.log('[Store] 开始错题重练', { mistakeId, questionId: mistake.questionId });
   },
 
   finishMistakePractice: () => {
-    const { practiceFromMistakeId, markMistakeReviewed } = get();
-    if (practiceFromMistakeId) {
+    const { practiceFromMistakeId, markMistakeReviewed, reviewCountIncremented } = get();
+    if (practiceFromMistakeId && !reviewCountIncremented) {
       markMistakeReviewed(practiceFromMistakeId);
+      set({ reviewCountIncremented: true });
       console.log('[Store] 完成错题重练，复习次数+1', { mistakeId: practiceFromMistakeId });
     }
+  },
+
+  exitMistakePractice: () => {
     set({
       practiceTargetQuestionId: null,
-      practiceFromMistakeId: null
+      practiceFromMistakeId: null,
+      reviewCountIncremented: false
     });
+    get().resetPractice();
   }
 }));

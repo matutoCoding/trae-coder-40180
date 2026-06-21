@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import SceneTag from '@/components/SceneTag';
 import { usePracticeStore } from '@/store/usePracticeStore';
-import { calcCorrectRate, getSceneLabel, formatDate } from '@/utils';
+import { calcCorrectRate, formatDate } from '@/utils';
 import type { SceneType } from '@/types';
 import styles from './index.module.scss';
 

@@ -22,11 +22,13 @@ const PracticePage: React.FC = () => {
     userInfo,
     practiceTargetQuestionId,
     practiceFromMistakeId,
+    reviewCountIncremented,
     setSelectedOption,
     submitAnswer,
     nextQuestion,
     resetPractice,
-    finishMistakePractice
+    finishMistakePractice,
+    exitMistakePractice
   } = usePracticeStore();
 
   const [questions, setQuestions] = useState<PracticeQuestion[]>([]);
@@ -53,14 +55,14 @@ const PracticePage: React.FC = () => {
 
   const hasFinishedRef = useRef(false);
   useEffect(() => {
-    if (isPracticeComplete && isMistakeReview && !hasFinishedRef.current) {
+    if (isPracticeComplete && isMistakeReview && !reviewCountIncremented && !hasFinishedRef.current) {
       hasFinishedRef.current = true;
       finishMistakePractice();
     }
     if (!isPracticeComplete) {
       hasFinishedRef.current = false;
     }
-  }, [isPracticeComplete, isMistakeReview, finishMistakePractice]);
+  }, [isPracticeComplete, isMistakeReview, reviewCountIncremented, finishMistakePractice]);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -130,7 +132,18 @@ const PracticePage: React.FC = () => {
     const rate = calcCorrectRate(correctCount, questions.length);
 
     const handleBackToMistakes = () => {
+      exitMistakePractice();
       Taro.switchTab({ url: '/pages/mistakes/index' });
+    };
+
+    const handleBackToMistakeDetail = () => {
+      const mistakeId = usePracticeStore.getState().practiceFromMistakeId;
+      exitMistakePractice();
+      if (mistakeId) {
+        Taro.navigateTo({ url: `/pages/mistake-detail/index?id=${mistakeId}` });
+      } else {
+        Taro.switchTab({ url: '/pages/mistakes/index' });
+      }
     };
 
     return (
@@ -166,9 +179,14 @@ const PracticePage: React.FC = () => {
           </Button>
 
           {isMistakeReview && (
-            <Button className={styles.backBtn} onClick={handleBackToMistakes}>
-              返回错题本
-            </Button>
+            <>
+              <Button className={styles.backBtn} onClick={handleBackToMistakeDetail}>
+                返回错题详情
+              </Button>
+              <Button className={styles.backBtn} onClick={handleBackToMistakes}>
+                返回错题本
+              </Button>
+            </>
           )}
         </View>
       </ScrollView>
