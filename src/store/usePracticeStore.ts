@@ -83,8 +83,8 @@ interface PracticeState {
   practiceTargetQuestionId: string | null;
   practiceFromMistakeId: string | null;
   reviewCountIncremented: boolean;
+  answerSubmittedInSession: boolean;
 
-  setCurrentQuestionIndex: (index: number) => void;
   setSelectedOption: (optionId: string | null) => void;
   setShowAnswer: (show: boolean) => void;
   submitAnswer: () => void;
@@ -100,6 +100,7 @@ interface PracticeState {
   startMistakePractice: (mistakeId: string) => void;
   finishMistakePractice: () => void;
   exitMistakePractice: () => void;
+  markAnswerSubmitted: () => void;
 }
 
 export const usePracticeStore = create<PracticeState>((set, get) => ({
@@ -114,8 +115,8 @@ export const usePracticeStore = create<PracticeState>((set, get) => ({
   practiceTargetQuestionId: null,
   practiceFromMistakeId: null,
   reviewCountIncremented: false,
+  answerSubmittedInSession: false,
 
-  setCurrentQuestionIndex: (index: number) => set({ currentQuestionIndex: index }),
   setSelectedOption: (optionId: string | null) => set({ selectedOptionId: optionId }),
   setShowAnswer: (show: boolean) => set({ showAnswer: show }),
 
@@ -264,25 +265,31 @@ export const usePracticeStore = create<PracticeState>((set, get) => ({
     set({
       practiceTargetQuestionId: mistake.questionId,
       practiceFromMistakeId: mistakeId,
-      reviewCountIncremented: false
+      reviewCountIncremented: false,
+      answerSubmittedInSession: false
     });
     console.log('[Store] 开始错题重练', { mistakeId, questionId: mistake.questionId });
   },
 
   finishMistakePractice: () => {
-    const { practiceFromMistakeId, markMistakeReviewed, reviewCountIncremented } = get();
-    if (practiceFromMistakeId && !reviewCountIncremented) {
+    const { practiceFromMistakeId, markMistakeReviewed, reviewCountIncremented, answerSubmittedInSession } = get();
+    if (practiceFromMistakeId && answerSubmittedInSession && !reviewCountIncremented) {
       markMistakeReviewed(practiceFromMistakeId);
       set({ reviewCountIncremented: true });
       console.log('[Store] 完成错题重练，复习次数+1', { mistakeId: practiceFromMistakeId });
     }
   },
 
+  markAnswerSubmitted: () => {
+    set({ answerSubmittedInSession: true });
+  },
+
   exitMistakePractice: () => {
     set({
       practiceTargetQuestionId: null,
       practiceFromMistakeId: null,
-      reviewCountIncremented: false
+      reviewCountIncremented: false,
+      answerSubmittedInSession: false
     });
     get().resetPractice();
   }

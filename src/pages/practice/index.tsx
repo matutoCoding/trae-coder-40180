@@ -23,12 +23,14 @@ const PracticePage: React.FC = () => {
     practiceTargetQuestionId,
     practiceFromMistakeId,
     reviewCountIncremented,
+    answerSubmittedInSession,
     setSelectedOption,
     submitAnswer,
     nextQuestion,
     resetPractice,
     finishMistakePractice,
-    exitMistakePractice
+    exitMistakePractice,
+    markAnswerSubmitted
   } = usePracticeStore();
 
   const [questions, setQuestions] = useState<PracticeQuestion[]>([]);
@@ -55,14 +57,14 @@ const PracticePage: React.FC = () => {
 
   const hasFinishedRef = useRef(false);
   useEffect(() => {
-    if (isPracticeComplete && isMistakeReview && !reviewCountIncremented && !hasFinishedRef.current) {
+    if (isPracticeComplete && isMistakeReview && !hasFinishedRef.current) {
       hasFinishedRef.current = true;
       finishMistakePractice();
     }
     if (!isPracticeComplete) {
       hasFinishedRef.current = false;
     }
-  }, [isPracticeComplete, isMistakeReview, reviewCountIncremented, finishMistakePractice]);
+  }, [isPracticeComplete, isMistakeReview, answerSubmittedInSession, reviewCountIncremented, finishMistakePractice]);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -81,6 +83,10 @@ const PracticePage: React.FC = () => {
     const selectedOption = currentQuestion?.options.find(opt => opt.id === selectedOptionId);
     if (selectedOption?.isCorrect) {
       setCorrectCount(prev => prev + 1);
+    }
+
+    if (isMistakeReview) {
+      markAnswerSubmitted();
     }
 
     submitAnswer();
@@ -104,6 +110,10 @@ const PracticePage: React.FC = () => {
     if (targetId) {
       const question = getQuestionById(targetId);
       loadedQuestions = question ? [question] : getTodayQuestions();
+      usePracticeStore.setState({
+        reviewCountIncremented: false,
+        answerSubmittedInSession: false
+      });
     } else {
       loadedQuestions = getTodayQuestions();
     }

@@ -7,7 +7,8 @@ import SceneTag from '@/components/SceneTag';
 import materials from '@/data/materials';
 import { usePracticeStore } from '@/store/usePracticeStore';
 import { formatDuration, formatDate, getQualityLabel, getQualityColor } from '@/utils';
-import type { SceneType, MaterialQuality, AddMaterialForm, Material } from '@/types';
+import type { SceneType, MaterialQuality, AddMaterialForm, Material, DialogueTurn } from '@/types';
+import { SCENE_INFO } from '@/types';
 import styles from './index.module.scss';
 
 const staticMaterials = materials;
@@ -41,6 +42,21 @@ const LibraryPage: React.FC = () => {
   const [lastAddedMaterial, setLastAddedMaterial] = useState<Material | null>(null);
 
   const { customMaterials, addCustomMaterial } = usePracticeStore();
+
+  const groupedDialogue = useMemo((): Record<SceneType, DialogueTurn[]> | null => {
+    if (!lastAddedMaterial) return null;
+    const groups: Record<SceneType, DialogueTurn[]> = {
+      opening: [],
+      clarify: [],
+      comfort: [],
+      closing: []
+    };
+    lastAddedMaterial.dialogue.forEach(turn => {
+      const scene = turn.segment || lastAddedMaterial.scene;
+      groups[scene].push(turn);
+    });
+    return groups;
+  }, [lastAddedMaterial]);
 
   const allMaterials = useMemo(() => {
     return [...customMaterials, ...staticMaterials];
@@ -192,22 +208,25 @@ const LibraryPage: React.FC = () => {
           </View>
         )}
 
-        {lastAddedMaterial && (
+        {lastAddedMaterial && groupedDialogue && (
           <View className={styles.resultSection}>
             <Text className={styles.resultTitle}>转写结果</Text>
 
-            <View className={styles.dialogueList}>
-              {lastAddedMaterial.dialogue.map(turn => (
-                <DialogueCard key={turn.id} dialogue={turn} showTimestamp />
-              ))}
-            </View>
-
-            <Text className={styles.resultSubtitle}>切分片段</Text>
-            <View className={styles.segmentList}>
-              {Array.from(new Set(lastAddedMaterial.dialogue.map(t => t.segment || lastAddedMaterial.scene))).map((seg, idx) => (
-                <SceneTag key={idx} scene={seg as SceneType} size="sm" />
-              ))}
-            </View>
+            {(Object.keys(groupedDialogue) as SceneType[]).map(seg => (
+              groupedDialogue[seg].length > 0 && (
+                <View key={seg} className={styles.resultSceneBlock}>
+                  <View className={styles.resultSceneHeader}>
+                    <SceneTag scene={seg} size="sm" />
+                    <Text className={styles.resultSceneTitle}>{SCENE_INFO[seg].label}</Text>
+                  </View>
+                  <View className={styles.dialogueList}>
+                    {groupedDialogue[seg].map(turn => (
+                      <DialogueCard key={turn.id} dialogue={turn} showTimestamp />
+                    ))}
+                  </View>
+                </View>
+              )
+            ))}
           </View>
         )}
 

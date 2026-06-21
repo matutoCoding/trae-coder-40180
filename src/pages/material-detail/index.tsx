@@ -6,8 +6,9 @@ import { usePracticeStore } from '@/store/usePracticeStore';
 import materials from '@/data/materials';
 import SceneTag from '@/components/SceneTag';
 import DialogueCard from '@/components/DialogueCard';
-import type { Material, SceneType } from '@/types';
-import { formatDuration, formatDate, getQualityLabel, getQualityColor } from '@/utils';
+import type { Material, SceneType, DialogueTurn } from '@/types';
+import { SCENE_INFO } from '@/types';
+import { formatDuration, formatDate, getQualityLabel } from '@/utils';
 import styles from './index.module.scss';
 
 const MaterialDetailPage: React.FC = () => {
@@ -50,6 +51,21 @@ const MaterialDetailPage: React.FC = () => {
       segment: segment as SceneType,
       count
     }));
+  }, [material]);
+
+  const groupedDialogue = useMemo(() => {
+    if (!material) return {} as Record<SceneType, DialogueTurn[]>;
+    const groups: Record<SceneType, DialogueTurn[]> = {
+      opening: [],
+      clarify: [],
+      comfort: [],
+      closing: []
+    };
+    material.dialogue.forEach(turn => {
+      const seg = turn.segment || material.scene;
+      groups[seg].push(turn);
+    });
+    return groups;
   }, [material]);
 
   if (notFound) {
@@ -142,16 +158,22 @@ const MaterialDetailPage: React.FC = () => {
           <Text className={styles.dialogueCount}>共 {material.dialogue.length} 句</Text>
         </View>
         <View className={styles.dialogueList}>
-          {material.dialogue.map(turn => {
-            const seg = turn.segment || material.scene;
+          {(['opening', 'clarify', 'comfort', 'closing'] as SceneType[]).map(seg => {
+            const turns = groupedDialogue[seg] || [];
+            if (turns.length === 0) return null;
             return (
-              <View key={turn.id} className={styles.dialogueItem}>
-                <View className={styles.dialogueCardWrapper}>
-                  <DialogueCard dialogue={turn} showTimestamp />
-                </View>
-                <View className={styles.dialogueSegmentTag}>
+              <View key={seg} className={styles.sceneBlock}>
+                <View className={styles.sceneBlockHeader}>
                   <SceneTag scene={seg} size="sm" />
+                  <Text className={styles.sceneBlockTitle}>{SCENE_INFO[seg].label}</Text>
                 </View>
+                {turns.map(turn => (
+                  <View key={turn.id} className={styles.dialogueItem}>
+                    <View className={styles.dialogueCardWrapper}>
+                      <DialogueCard dialogue={turn} showTimestamp />
+                    </View>
+                  </View>
+                ))}
               </View>
             );
           })}

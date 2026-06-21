@@ -222,3 +222,23 @@
 .bottomSpacer {
   height: $spacing-xl;
 }
+
+.sceneBlock {
+  margin-bottom: $spacing-lg;
+}
+
+.sceneBlockHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: $radius-md;
+}
+
+.sceneBlockTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
