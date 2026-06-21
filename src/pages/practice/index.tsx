@@ -20,21 +20,22 @@ const PracticePage: React.FC = () => {
     showAnswer,
     isPracticeComplete,
     userInfo,
+    practiceTargetQuestionId,
+    practiceFromMistakeId,
     setSelectedOption,
     submitAnswer,
     nextQuestion,
-    resetPractice
+    resetPractice,
+    finishMistakePractice
   } = usePracticeStore();
 
   const [questions, setQuestions] = useState<PracticeQuestion[]>([]);
   const [correctCount, setCorrectCount] = useState(0);
 
-  const questionIdRef = useRef<string | undefined>(
-    Taro.getCurrentInstance().router?.params?.questionId
-  );
+  const isMistakeReview = practiceFromMistakeId !== null;
 
   useEffect(() => {
-    const targetId = questionIdRef.current;
+    const targetId = practiceTargetQuestionId;
     let loadedQuestions: PracticeQuestion[];
 
     if (targetId) {
@@ -48,7 +49,18 @@ const PracticePage: React.FC = () => {
 
     setQuestions(loadedQuestions);
     usePracticeStore.setState({ todayQuestions: loadedQuestions });
-  }, []);
+  }, [practiceTargetQuestionId]);
+
+  const hasFinishedRef = useRef(false);
+  useEffect(() => {
+    if (isPracticeComplete && isMistakeReview && !hasFinishedRef.current) {
+      hasFinishedRef.current = true;
+      finishMistakePractice();
+    }
+    if (!isPracticeComplete) {
+      hasFinishedRef.current = false;
+    }
+  }, [isPracticeComplete, isMistakeReview, finishMistakePractice]);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -84,7 +96,7 @@ const PracticePage: React.FC = () => {
   const handleRetry = () => {
     resetPractice();
     setCorrectCount(0);
-    const targetId = questionIdRef.current;
+    const targetId = practiceTargetQuestionId;
     let loadedQuestions: PracticeQuestion[];
 
     if (targetId) {
@@ -116,6 +128,11 @@ const PracticePage: React.FC = () => {
 
   if (isPracticeComplete) {
     const rate = calcCorrectRate(correctCount, questions.length);
+
+    const handleBackToMistakes = () => {
+      Taro.switchTab({ url: '/pages/mistakes/index' });
+    };
+
     return (
       <ScrollView className={styles.pageContainer} scrollY>
         <View className={styles.completeCard}>
@@ -123,7 +140,7 @@ const PracticePage: React.FC = () => {
             <Text className={styles.completeIconText}>✓</Text>
           </View>
           <Text className={styles.completeTitle}>
-            {questionIdRef.current ? '错题重练完成！' : '今日训练完成！'}
+            {isMistakeReview ? '错题重练完成！' : '今日训练完成！'}
           </Text>
           <Text className={styles.completeSubtitle}>
             {rate >= 80 ? '太棒了！继续保持！' : rate >= 60 ? '不错哦，还有提升空间！' : '加油，多多练习！'}
@@ -147,6 +164,12 @@ const PracticePage: React.FC = () => {
           <Button className={styles.retryBtn} onClick={handleRetry}>
             再来一组
           </Button>
+
+          {isMistakeReview && (
+            <Button className={styles.backBtn} onClick={handleBackToMistakes}>
+              返回错题本
+            </Button>
+          )}
         </View>
       </ScrollView>
     );

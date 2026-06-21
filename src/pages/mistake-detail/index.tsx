@@ -15,7 +15,6 @@ const MistakeDetailPage: React.FC = () => {
   const [mistake, setMistake] = useState<MistakeRecord | null>(null);
   const [notFound, setNotFound] = useState(false);
   const findMistakeById = usePracticeStore(s => s.findMistakeById);
-  const markMistakeReviewed = usePracticeStore(s => s.markMistakeReviewed);
 
   useEffect(() => {
     const params = Taro.getCurrentInstance().router?.params;
@@ -34,7 +33,7 @@ const MistakeDetailPage: React.FC = () => {
 
   const handleRetry = () => {
     if (!mistake) return;
-    markMistakeReviewed(mistake.id);
+    usePracticeStore.getState().startMistakePractice(mistake.id);
     Taro.switchTab({ url: '/pages/practice/index' });
   };
 

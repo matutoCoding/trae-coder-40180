@@ -86,6 +86,8 @@ interface PracticeState {
   customMaterials: Material[];
   userInfo: UserInfo;
   isPracticeComplete: boolean;
+  practiceTargetQuestionId: string | null;
+  practiceFromMistakeId: string | null;
 
   setCurrentQuestionIndex: (index: number) => void;
   setSelectedOption: (optionId: string | null) => void;
@@ -100,6 +102,8 @@ interface PracticeState {
   getMistakeStats: () => Record<SceneType, number>;
   getErrorTypeStats: () => Record<string, number>;
   findMistakeById: (id: string) => MistakeRecord | undefined;
+  startMistakePractice: (mistakeId: string) => void;
+  finishMistakePractice: () => void;
 }
 
 export const usePracticeStore = create<PracticeState>((set, get) => ({
@@ -111,6 +115,8 @@ export const usePracticeStore = create<PracticeState>((set, get) => ({
   customMaterials: loadFromStorage<Material[]>(STORAGE_KEY_MATERIALS, []),
   userInfo: initialUserInfo,
   isPracticeComplete: false,
+  practiceTargetQuestionId: null,
+  practiceFromMistakeId: null,
 
   setCurrentQuestionIndex: (index: number) => set({ currentQuestionIndex: index }),
   setSelectedOption: (optionId: string | null) => set({ selectedOptionId: optionId }),
@@ -251,5 +257,27 @@ export const usePracticeStore = create<PracticeState>((set, get) => ({
 
   findMistakeById: (id: string) => {
     return get().mistakes.find(m => m.id === id);
+  },
+
+  startMistakePractice: (mistakeId: string) => {
+    const mistake = get().findMistakeById(mistakeId);
+    if (!mistake) return;
+    set({
+      practiceTargetQuestionId: mistake.questionId,
+      practiceFromMistakeId: mistakeId
+    });
+    console.log('[Store] 开始错题重练', { mistakeId, questionId: mistake.questionId });
+  },
+
+  finishMistakePractice: () => {
+    const { practiceFromMistakeId, markMistakeReviewed } = get();
+    if (practiceFromMistakeId) {
+      markMistakeReviewed(practiceFromMistakeId);
+      console.log('[Store] 完成错题重练，复习次数+1', { mistakeId: practiceFromMistakeId });
+    }
+    set({
+      practiceTargetQuestionId: null,
+      practiceFromMistakeId: null
+    });
   }
 }));

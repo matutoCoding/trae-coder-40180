@@ -7,7 +7,6 @@ import materials from '@/data/materials';
 import SceneTag from '@/components/SceneTag';
 import DialogueCard from '@/components/DialogueCard';
 import type { Material, SceneType } from '@/types';
-import { SCENE_INFO } from '@/types';
 import { formatDuration, formatDate, getQualityLabel, getQualityColor, getSceneLabel } from '@/utils';
 import styles from './index.module.scss';
 

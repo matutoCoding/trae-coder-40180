@@ -5,6 +5,7 @@ import Taro from '@tarojs/taro';
 import type { MistakeRecord } from '@/types';
 import SceneTag from '@/components/SceneTag';
 import { formatDate } from '@/utils';
+import { usePracticeStore } from '@/store/usePracticeStore';
 import styles from './index.module.scss';
 
 interface MistakeItemProps {
@@ -22,6 +23,12 @@ const MistakeItem: React.FC<MistakeItemProps> = ({ mistake, onClick, className }
         url: `/pages/mistake-detail/index?id=${mistake.id}`
       });
     }
+  };
+
+  const handleRetry = (e) => {
+    e.stopPropagation();
+    usePracticeStore.getState().startMistakePractice(mistake.id);
+    Taro.switchTab({ url: '/pages/practice/index' });
   };
 
   return (
@@ -63,12 +70,7 @@ const MistakeItem: React.FC<MistakeItemProps> = ({ mistake, onClick, className }
         </Text>
         <View
           className={styles.retryBtn}
-          onClick={(e) => {
-            e.stopPropagation();
-            Taro.navigateTo({
-              url: `/pages/practice/index?questionId=${mistake.questionId}`
-            });
-          }}
+          onClick={handleRetry}
         >
           <Text className={styles.retryBtnText}>再练一次</Text>
         </View>

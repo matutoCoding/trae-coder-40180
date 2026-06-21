@@ -8,7 +8,6 @@ import materials from '@/data/materials';
 import { usePracticeStore } from '@/store/usePracticeStore';
 import { formatDuration, formatDate, getQualityLabel, getQualityColor, getSceneLabel } from '@/utils';
 import type { SceneType, MaterialQuality, AddMaterialForm, Material } from '@/types';
-import { SCENE_INFO } from '@/types';
 import styles from './index.module.scss';
 
 const staticMaterials = materials;
@@ -205,8 +204,8 @@ const LibraryPage: React.FC = () => {
 
             <Text className={styles.resultSubtitle}>切分片段</Text>
             <View className={styles.segmentList}>
-              {lastAddedMaterial.tags.map((tag, idx) => (
-                <SceneTag key={idx} scene={tag as SceneType} size="sm" />
+              {Array.from(new Set(lastAddedMaterial.dialogue.map(t => t.segment || lastAddedMaterial.scene))).map((seg, idx) => (
+                <SceneTag key={idx} scene={seg as SceneType} size="sm" />
               ))}
             </View>
           </View>
