@@ -1,0 +1,178 @@
+// 必须转发和使用 theme.scss
+@forward './theme.scss';
+@use './theme.scss' as *;
+
+// ============================================
+// 全局 SCSS 变量（AI智能客服训练App）
+// ============================================
+
+// 屏幕适配（设计稿基准 750rpx）
+$screen-width: 750rpx;
+$page-padding: 32rpx; // 页面左右安全边距
+$page-spacing: 32rpx;
+$max-content-width: 686rpx; // 750 - 32*2，内容最大宽度
+
+// 间距（8px 网格系统）
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 48rpx;
+
+// 圆角（语义化）
+$radius-xs: 4rpx; // 小元素：标签、徽章
+$radius-sm: 8rpx; // 卡片内小元素
+$radius-md: 12rpx; // 常规卡片
+$radius-lg: 16rpx; // 大卡片
+$radius-xl: 20rpx; // 特大卡片
+$radius-button: 48rpx; // 按钮专用（全圆角，符合主流小程序）
+$radius-round: 999rpx; // 完全圆形
+
+// 按钮高度
+$button-height-sm: 64rpx; // 小按钮（次要操作）
+$button-height-md: 80rpx; // 常规按钮（主流标准）
+$button-height-lg: 96rpx; // 大按钮（主要操作、底部固定）
+
+// 阴影（语义化）
+$shadow-card: 0 4rpx 16rpx rgba(99, 102, 241, 0.08); // 卡片阴影
+$shadow-card-hover: 0 8rpx 24rpx rgba(99, 102, 241, 0.12); // 卡片悬浮
+$shadow-float: 0 4rpx 16rpx rgba(0, 0, 0, 0.1); // 浮层阴影
+$shadow-popup: 0 8rpx 32rpx rgba(0, 0, 0, 0.15); // 弹窗阴影
+$shadow-ai: 0 0 20rpx rgba(99, 102, 241, 0.25); // AI光晕
+
+// 字体大小
+$font-size-xs: 22rpx;
+$font-size-sm: 24rpx;
+$font-size-md: 28rpx;
+$font-size-lg: 32rpx;
+$font-size-xl: 36rpx;
+$font-size-xxl: 40rpx;
+
+// 行高
+$line-height-tight: 1.3;
+$line-height-normal: 1.5;
+$line-height-loose: 1.8;
+
+// 字重
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// 过渡动画
+$transition-fast: 0.15s ease;
+$transition-base: 0.25s ease;
+$transition-slow: 0.35s ease;
+
+// ============================================
+// 常用 Mixin
+// ============================================
+// 单行文本省略
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 多行文本省略
+@mixin text-ellipsis-multi($lines: 2) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 清除浮动
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+// 水平垂直居中
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 横向滚动容器（微信小程序兼容）
+@mixin scroll-x-container {
+  white-space: nowrap;
+}
+
+// 横向滚动子项（微信小程序兼容，必须配合 scroll-x-container 使用）
+@mixin scroll-x-item($width) {
+  display: inline-block;
+  width: $width;
+  vertical-align: top;
+  white-space: normal; // 恢复子项内部换行
+}
+
+// Button 样式重置与保护
+@mixin button-reset {
+  padding: 0;
+  margin: 0;
+  line-height: normal;
+  text-align: inherit;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  &::after {
+    border: none;
+  }
+}
+
+// AI渐变按钮
+@mixin ai-gradient-button {
+  @include button-reset;
+  height: $button-height-md;
+  border-radius: $radius-button;
+  background: $color-primary-gradient;
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  box-shadow: $shadow-ai;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+// 卡片基础样式
+@mixin card-base {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  padding: $spacing-lg;
+}
+
+// AI光晕效果
+@mixin ai-glow {
+  box-shadow: $shadow-ai;
+}
+
+// 场景标签颜色映射
+@mixin scene-tag-color($type) {
+  @if $type == opening {
+    background: rgba(59, 130, 246, 0.1);
+    color: $color-scene-opening;
+  } @else if $type == clarify {
+    background: rgba(139, 92, 246, 0.1);
+    color: $color-scene-clarify;
+  } @else if $type == comfort {
+    background: rgba(236, 72, 153, 0.1);
+    color: $color-scene-comfort;
+  } @else if $type == closing {
+    background: rgba(16, 185, 129, 0.1);
+    color: $color-scene-closing;
+  }
+}

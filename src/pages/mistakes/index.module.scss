@@ -1,0 +1,248 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  padding: 0 $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-xl});
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.headerSection {
+  padding-top: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.pageTitle {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.pageSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-lg;
+}
+
+.statsSection {
+  background: $color-primary-gradient;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: 0 8rpx 32rpx rgba(99, 102, 241, 0.25);
+}
+
+.statsMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-lg;
+}
+
+.totalMistakes {
+  text-align: center;
+}
+
+.totalNumber {
+  font-size: 72rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  line-height: 1;
+  display: block;
+}
+
+.totalLabel {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: $spacing-xs;
+}
+
+.weakestScene {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  text-align: center;
+  min-width: 200rpx;
+}
+
+.weakestLabel {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.8);
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.weakestName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.sceneStats {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.sceneStatItem {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  text-align: center;
+}
+
+.sceneStatValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  display: block;
+  line-height: 1.2;
+}
+
+.sceneStatLabel {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4rpx;
+}
+
+.filterSection {
+  margin-bottom: $spacing-lg;
+}
+
+.filterLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.sceneTabs {
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.sceneTab {
+  padding: 12rpx 24rpx;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary-gradient;
+    border-color: $color-primary;
+    box-shadow: $shadow-ai;
+  }
+}
+
+.sceneTabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .active & {
+    color: $color-text-white;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+
+  .titleIcon {
+    width: 8rpx;
+    height: 32rpx;
+    border-radius: $radius-xs;
+    background: $color-primary-gradient;
+  }
+
+  .countBadge {
+    margin-left: auto;
+    padding: 4rpx 12rpx;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: $radius-round;
+    font-size: $font-size-xs;
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.errorTypeSection {
+  margin-bottom: $spacing-lg;
+}
+
+.errorTypeList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.errorTypeItem {
+  @include card-base;
+  padding: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-sm;
+}
+
+.errorTypeBar {
+  flex: 1;
+  height: 12rpx;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: $radius-round;
+  overflow: hidden;
+}
+
+.errorTypeFill {
+  height: 100%;
+  background: $color-primary-gradient;
+  border-radius: $radius-round;
+  transition: width $transition-base ease;
+}
+
+.errorTypeName {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+  width: 180rpx;
+}
+
+.errorTypeCount {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+  min-width: 60rpx;
+  text-align: right;
+}
+
+.mistakeList {
+  display: flex;
+  flex-direction: column;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl * 2;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}

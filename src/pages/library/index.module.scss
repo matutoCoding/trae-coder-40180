@@ -1,0 +1,250 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  padding: 0 $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-xl});
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.headerSection {
+  padding-top: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.pageTitle {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.pageSubtitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-lg;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  padding: 0 $spacing-lg;
+  height: $button-height-md;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-lg;
+}
+
+.searchIcon {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+  margin-right: $spacing-sm;
+}
+
+.searchInput {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.filterSection {
+  margin-bottom: $spacing-lg;
+}
+
+.filterLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+  display: block;
+}
+
+.sceneTags {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.sceneTag {
+  padding: 12rpx 24rpx;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary-gradient;
+    border-color: $color-primary;
+    box-shadow: $shadow-ai;
+  }
+}
+
+.sceneTagText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .active & {
+    color: $color-text-white;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.qualityFilter {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.qualityTab {
+  flex: 1;
+  height: 64rpx;
+  border-radius: $radius-button;
+  background: $color-bg-card;
+  border: 2rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-base;
+
+  &.active.excellent {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: $color-success;
+  }
+
+  &.active.failed {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: $color-error;
+  }
+}
+
+.qualityTabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .excellent.active & {
+    color: $color-success;
+    font-weight: $font-weight-medium;
+  }
+
+  .failed.active & {
+    color: $color-error;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.materialList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.materialCard {
+  @include card-base;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.qualityBadge {
+  padding: 4rpx 12rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &.excellent {
+    background: rgba(16, 185, 129, 0.1);
+    color: $color-success;
+  }
+
+  &.failed {
+    background: rgba(239, 68, 68, 0.1);
+    color: $color-error;
+  }
+}
+
+.materialTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+  @include text-ellipsis;
+}
+
+.materialSummary {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(2);
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.categoryTag {
+  padding: 4rpx 12rpx;
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  color: $color-primary;
+}
+
+.viewBtn {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl * 2;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-md;
+  opacity: 0.3;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}

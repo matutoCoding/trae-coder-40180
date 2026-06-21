@@ -1,0 +1,28 @@
+@use '@/styles/variables.scss' as *;
+
+.sceneTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+
+  &.sm {
+    padding: 4rpx 12rpx;
+    height: 36rpx;
+
+    .tagText {
+      font-size: $font-size-xs;
+    }
+  }
+
+  &.md {
+    padding: 8rpx 16rpx;
+    height: 48rpx;
+
+    .tagText {
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+    }
+  }
+}

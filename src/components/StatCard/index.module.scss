@@ -1,0 +1,75 @@
+@use '@/styles/variables.scss' as *;
+
+.statCard {
+  @include card-base;
+  flex: 1;
+  min-width: 0;
+
+  &.primary {
+    .statValue { color: $color-primary; }
+  }
+
+  &.success {
+    .statValue { color: $color-success; }
+  }
+
+  &.warning {
+    .statValue { color: $color-warning; }
+  }
+
+  &.error {
+    .statValue { color: $color-error; }
+  }
+}
+
+.statTitle {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.statValueWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+  margin-bottom: $spacing-xs;
+}
+
+.statValue {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  line-height: 1.2;
+}
+
+.statUnit {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.statTrend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-round;
+  font-size: $font-size-xs;
+
+  &.up {
+    background: rgba(16, 185, 129, 0.1);
+    color: $color-success;
+  }
+
+  &.down {
+    background: rgba(239, 68, 68, 0.1);
+    color: $color-error;
+  }
+}
+
+.trendIcon {
+  font-weight: $font-weight-bold;
+}
+
+.trendText {
+  font-size: $font-size-xs;
+}

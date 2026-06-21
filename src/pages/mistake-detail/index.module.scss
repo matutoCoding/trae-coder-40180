@@ -1,0 +1,37 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  padding: 0 $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-xl});
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderContent {
+  text-align: center;
+  padding: $spacing-xl * 2;
+}
+
+.placeholderIcon {
+  font-size: 120rpx;
+  margin-bottom: $spacing-lg;
+  opacity: 0.3;
+}
+
+.placeholderTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.placeholderText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  line-height: $line-height-loose;
+}

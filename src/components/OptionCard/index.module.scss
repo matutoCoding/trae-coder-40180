@@ -1,0 +1,118 @@
+@use '@/styles/variables.scss' as *;
+
+.optionCard {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  border: 2rpx solid $color-border;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active:not(.disabled) {
+    transform: scale(0.98);
+  }
+
+  &.normal {
+    border-color: $color-border;
+
+    &:active:not(.disabled) {
+      border-color: $color-primary;
+      background: rgba(99, 102, 241, 0.03);
+    }
+  }
+
+  &.selected {
+    border-color: $color-primary;
+    background: rgba(99, 102, 241, 0.08);
+    box-shadow: $shadow-ai;
+  }
+
+  &.correct {
+    border-color: $color-success;
+    background: rgba(16, 185, 129, 0.08);
+  }
+
+  &.wrong {
+    border-color: $color-error;
+    background: rgba(239, 68, 68, 0.08);
+  }
+
+  &.disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
+  }
+}
+
+.optionLabel {
+  flex-shrink: 0;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: rgba(99, 102, 241, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .selected & {
+    background: $color-primary-gradient;
+  }
+
+  .correct & {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  }
+
+  .wrong & {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  }
+}
+
+.labelText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+
+  .selected &,
+  .correct &,
+  .wrong & {
+    color: $color-text-white;
+  }
+}
+
+.optionContent {
+  flex: 1;
+  font-size: $font-size-md;
+  line-height: $line-height-loose;
+  color: $color-text-primary;
+  padding-right: 60rpx;
+}
+
+.resultIcon {
+  position: absolute;
+  right: $spacing-lg;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.correct {
+    background: $color-success;
+  }
+
+  &.wrong {
+    background: $color-error;
+  }
+}
+
+.resultText {
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+}
